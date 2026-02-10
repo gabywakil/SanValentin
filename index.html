@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Para ti, mi amor ❤️</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Pantalla de inicio para activar música -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-content">
+      <h1 class="start-title">Para ti ❤️</h1>
+      <p class="start-subtitle">Toca para comenzar</p>
+      <button class="start-button" id="startButton">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="40" height="40">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <span>Iniciar</span>
+      </button>
+      <p class="start-hint">Con música 🎵</p>
+    </div>
+  </div>
+
+  <!-- Reproductor de música flotante -->
+  <div class="music-player" id="musicPlayer">
+    <div class="player-content">
+      <div class="album-cover">
+        <img src="https://i.ytimg.com/vi/ieBvA3kMJB4/maxresdefault.jpg" alt="Portada de la canción" id="albumCover" />
+        <div class="vinyl-overlay"></div>
+      </div>
+      <div class="song-info">
+        <h3 class="song-title" id="songTitle">Canción Romántica</h3>
+        <p class="artist-name" id="artistName">Para ti</p>
+      </div>
+      <div class="player-controls">
+        <div class="progress-container">
+          <span class="time-current" id="currentTime">0:00</span>
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <span class="time-total" id="totalTime">0:00</span>
+        </div>
+        <div class="controls-buttons">
+          <button class="control-btn shuffle-btn" id="shuffleBtn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+            </svg>
+          </button>
+          <button class="control-btn prev-btn-music" id="prevBtnMusic">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+            </svg>
+          </button>
+          <button class="control-btn play-pause-btn" id="playPauseBtn">
+            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <svg class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+            </svg>
+          </button>
+          <button class="control-btn next-btn-music" id="nextBtnMusic">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+            </svg>
+          </button>
+          <button class="control-btn repeat-btn" id="repeatBtn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button class="close-player-btn" id="closePlayerBtn">×</button>
+    </div>
+  </div>
+
+  <!-- Reproductor de YouTube (oculto) -->
+  <div id="youtube-player"></div>
+
+  <!-- Partículas de corazones flotantes -->
+  <div class="particles-container" id="particles"></div>
+
+  <!-- Contenedor principal con scroll -->
+  <div class="scroll-container" id="scrollContainer">
+    
+    <!-- Sección 1: Portada -->
+    <section class="section section-cover">
+      <div class="cover-content fade-in">
+        <div class="date-badge">13 de Octubre, 2023</div>
+        <h1 class="main-title">Te amo Cata</h1>
+        <div class="subtitle-wrapper">
+          <p class="subtitle">Hoy serán tus regalos…</p>
+          <p class="subtitle">2 cosas de mi vida</p>
+        </div>
+        <div class="scroll-indicator">
+          <div class="mouse">
+            <div class="wheel"></div>
+          </div>
+          <p>Desliza para continuar</p>
+        </div>
+      </div>
+      <div class="heart-float heart-1"></div>
+      <div class="heart-float heart-2"></div>
+      <div class="heart-float heart-3"></div>
+    </section>
+
+    <!-- Sección 2: Introducción -->
+    <section class="section section-intro">
+      <div class="content-box slide-up">
+        <p class="lead-text">La razón no es mi fuerte</p>
+        <p class="sub-text">una de 2, a veces,</p>
+        
+        <div class="divider-fancy">
+          <span class="line"></span>
+          <span class="heart-icon">♥</span>
+          <span class="line"></span>
+        </div>
+
+        <p class="body-text">
+          Honestamente hasta en la vida, las palabras no me alcanzan
+          para explicar lo que siento.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sección 3: Sentimientos -->
+    <section class="section section-feelings">
+      <div class="feelings-content slide-up">
+        <div class="quote-mark">"</div>
+        <p class="feeling-text">
+          Tengo el placer de sentir como me miras,
+          como me hablas, como te ríes…
+        </p>
+        <div class="quote-mark closing">"</div>
+      </div>
+    </section>
+
+    <!-- Sección 4: Promesa -->
+    <section class="section section-promise">
+      <div class="promise-box slide-up">
+        <p class="promise-text">
+          En cada cosa que haces, me recuerdas que quiero quedarme.
+        </p>
+        <div class="hearts-row">
+          <span class="mini-heart">♥</span>
+          <span class="mini-heart">♥</span>
+          <span class="mini-heart">♥</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 5: Galería de fotos 1 -->
+    <section class="section section-photo">
+      <div class="photo-card slide-up">
+        <div class="photo-frame">
+          <img src="1770765762585_image.png" alt="Nuestro momento" />
+        </div>
+        <p class="photo-text">Cada momento contigo es especial</p>
+      </div>
+    </section>
+
+    <!-- Sección 6: Galería de fotos 2 -->
+    <section class="section section-photo">
+      <div class="photo-card slide-up">
+        <div class="photo-frame">
+          <img src="1770765772758_image.png" alt="Nuestro recuerdo" />
+        </div>
+        <p class="photo-text">Atesoro cada sonrisa tuya</p>
+      </div>
+    </section>
+
+    <!-- Sección 7: Galería de fotos 3 -->
+    <section class="section section-photo">
+      <div class="photo-card slide-up">
+        <div class="photo-frame">
+          <img src="1770765783222_image.png" alt="Juntos" />
+        </div>
+        <p class="photo-text">Tú iluminas mi vida</p>
+      </div>
+    </section>
+
+    <!-- Sección 8: Galería de fotos 4 -->
+    <section class="section section-photo">
+      <div class="photo-card slide-up">
+        <div class="photo-frame">
+          <img src="1770765793698_image.png" alt="Para siempre" />
+        </div>
+        <p class="photo-text">Contigo quiero estar siempre</p>
+      </div>
+    </section>
+
+    <!-- Sección 9: Mensaje especial -->
+    <section class="section section-special">
+      <div class="special-content slide-up">
+        <div class="sparkle">✨</div>
+        <h2 class="special-title">¿Quieres ver lo bonito?</h2>
+        <p class="special-subtitle">Hay algo más para ti...</p>
+        <button class="discover-btn" id="discoverBtn">
+          <span>DESCUBRE</span>
+          <span class="btn-heart">♥</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Sección 10: Carrusel interactivo -->
+    <section class="section section-carousel hidden" id="carouselSection">
+      <div class="carousel-wrapper">
+        <button class="close-btn" id="closeCarousel">×</button>
+        
+        <h2 class="carousel-title">Nuestros mejores momentos</h2>
+        
+        <div class="carousel-container">
+          <button class="nav-btn prev-btn" id="prevBtn">‹</button>
+          
+          <div class="carousel-track-container">
+            <div class="carousel-track" id="carouselTrack">
+              <!-- Slide 1 -->
+              <div class="carousel-slide active">
+                <div class="slide-content">
+                  <img src="1770765762585_image.png" alt="Momento 1" />
+                  <div class="slide-overlay">
+                    <p class="slide-caption">El inicio de algo hermoso</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Slide 2 -->
+              <div class="carousel-slide">
+                <div class="slide-content">
+                  <img src="1770765772758_image.png" alt="Momento 2" />
+                  <div class="slide-overlay">
+                    <p class="slide-caption">Momentos que no olvidaré</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Slide 3 -->
+              <div class="carousel-slide">
+                <div class="slide-content">
+                  <img src="1770765783222_image.png" alt="Momento 3" />
+                  <div class="slide-overlay">
+                    <p class="slide-caption">Tu sonrisa es mi felicidad</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Slide 4 -->
+              <div class="carousel-slide">
+                <div class="slide-content">
+                  <img src="1770765793698_image.png" alt="Momento 4" />
+                  <div class="slide-overlay">
+                    <p class="slide-caption">Para siempre juntos ❤️</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="nav-btn next-btn" id="nextBtn">›</button>
+        </div>
+        
+        <div class="carousel-dots" id="carouselDots">
+          <span class="dot active" data-slide="0"></span>
+          <span class="dot" data-slide="1"></span>
+          <span class="dot" data-slide="2"></span>
+          <span class="dot" data-slide="3"></span>
+        </div>
+
+        <div class="final-message">
+          <p class="final-text">Cada foto guarda un recuerdo,</p>
+          <p class="final-text">cada recuerdo guarda tu esencia,</p>
+          <p class="final-signature">y tú eres mi mayor tesoro.</p>
+          <div class="hearts-row">
+            <span class="mini-heart pulse">♥</span>
+            <span class="mini-heart pulse delay-1">♥</span>
+            <span class="mini-heart pulse delay-2">♥</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 11: Cierre -->
+    <section class="section section-ending">
+      <div class="ending-content fade-in">
+        <div class="monogram-fancy">TC</div>
+        <p class="ending-text">Con todo mi amor,</p>
+        <p class="ending-text">para ti, hoy y siempre</p>
+        <div class="hearts-row">
+          <span class="mini-heart">♥</span>
+          <span class="mini-heart">♥</span>
+          <span class="mini-heart">♥</span>
+          <span class="mini-heart">♥</span>
+          <span class="mini-heart">♥</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // PANTALLA DE INICIO
+    // ==========================================
+    const startScreen = document.getElementById('startScreen');
+    const startButton = document.getElementById('startButton');
+    let musicStarted = false;
+
+    startButton.addEventListener('click', () => {
+      startScreen.classList.add('fade-out');
+      setTimeout(() => {
+        startScreen.style.display = 'none';
+      }, 500);
+      
+      // Iniciar música
+      if (youtubePlayer && youtubePlayer.playVideo) {
+        youtubePlayer.playVideo();
+        musicStarted = true;
+        
+        // Mostrar reproductor
+        setTimeout(() => {
+          document.getElementById('musicPlayer').classList.add('visible');
+        }, 800);
+      }
+    });
+
+    // ==========================================
+    // CARGAR API DE YOUTUBE
+    // ==========================================
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var youtubePlayer;
+    var progressInterval;
+
+    function onYouTubeIframeAPIReady() {
+      youtubePlayer = new YT.Player('youtube-player', {
+        height: '0',
+        width: '0',
+        videoId: 'ieBvA3kMJB4', // Tu canción de YouTube
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0,
+          'disablekb': 1,
+          'modestbranding': 1,
+          'playsinline': 1,
+          'enablejsapi': 1
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      console.log('YouTube player ready');
+      // El reproductor está listo, esperando el click del usuario
+    }
+
+    function onPlayerStateChange(event) {
+      const playIcon = document.querySelector('.play-icon');
+      const pauseIcon = document.querySelector('.pause-icon');
+      const musicPlayer = document.getElementById('musicPlayer');
+
+      if (event.data == YT.PlayerState.PLAYING) {
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+        musicPlayer.classList.add('playing');
+
+        // Actualizar duración
+        var duration = youtubePlayer.getDuration();
+        document.getElementById('totalTime').textContent = formatTime(duration);
+        
+        // Actualizar progreso cada segundo
+        if (progressInterval) clearInterval(progressInterval);
+        progressInterval = setInterval(function() {
+          var currentTime = youtubePlayer.getCurrentTime();
+          var duration = youtubePlayer.getDuration();
+          var progress = (currentTime / duration) * 100;
+          
+          document.getElementById('progressFill').style.width = progress + '%';
+          document.getElementById('currentTime').textContent = formatTime(currentTime);
+        }, 500);
+      } else if (event.data == YT.PlayerState.PAUSED) {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        musicPlayer.classList.remove('playing');
+        clearInterval(progressInterval);
+      } else if (event.data == YT.PlayerState.ENDED) {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        musicPlayer.classList.remove('playing');
+        clearInterval(progressInterval);
+        
+        // Reiniciar si está en loop
+        if (isLooping) {
+          setTimeout(() => {
+            youtubePlayer.playVideo();
+          }, 500);
+        }
+      }
+    }
+
+    // ==========================================
+    // REPRODUCTOR DE MÚSICA - CONTROLES
+    // ==========================================
+    const musicPlayer = document.getElementById('musicPlayer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progressBar = document.getElementById('progressBar');
+    const closePlayerBtn = document.getElementById('closePlayerBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const repeatBtn = document.getElementById('repeatBtn');
+    const prevBtnMusic = document.getElementById('prevBtnMusic');
+    const nextBtnMusic = document.getElementById('nextBtnMusic');
+
+    // Play/Pause
+    playPauseBtn.addEventListener('click', () => {
+      if (youtubePlayer && youtubePlayer.getPlayerState) {
+        if (youtubePlayer.getPlayerState() == YT.PlayerState.PLAYING) {
+          youtubePlayer.pauseVideo();
+        } else {
+          youtubePlayer.playVideo();
+        }
+      }
+    });
+
+    // Click en barra de progreso
+    progressBar.addEventListener('click', (e) => {
+      if (youtubePlayer && youtubePlayer.getDuration) {
+        const rect = progressBar.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        const newTime = percent * youtubePlayer.getDuration();
+        youtubePlayer.seekTo(newTime, true);
+      }
+    });
+
+    // Cerrar reproductor
+    closePlayerBtn.addEventListener('click', () => {
+      musicPlayer.classList.remove('visible');
+      if (youtubePlayer && youtubePlayer.pauseVideo) {
+        youtubePlayer.pauseVideo();
+      }
+    });
+
+    // Shuffle toggle (visual)
+    shuffleBtn.addEventListener('click', () => {
+      shuffleBtn.classList.toggle('active');
+    });
+
+    // Repeat toggle
+    let isLooping = false;
+    repeatBtn.addEventListener('click', () => {
+      repeatBtn.classList.toggle('active');
+      isLooping = !isLooping;
+    });
+
+    // Botones prev/next
+    prevBtnMusic.addEventListener('click', () => {
+      if (youtubePlayer && youtubePlayer.seekTo) {
+        youtubePlayer.seekTo(0, true);
+        youtubePlayer.playVideo();
+      }
+    });
+
+    nextBtnMusic.addEventListener('click', () => {
+      if (youtubePlayer && youtubePlayer.seekTo) {
+        youtubePlayer.seekTo(0, true);
+        youtubePlayer.playVideo();
+      }
+    });
+
+    // Formatear tiempo
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return '0:00';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // ==========================================
+    // PARTÍCULAS DE CORAZONES
+    // ==========================================
+    function createHeartParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = 15;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 10 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        particle.innerHTML = '♥';
+        container.appendChild(particle);
+      }
+    }
+
+    createHeartParticles();
+
+    // ==========================================
+    // ANIMACIONES DE SCROLL
+    // ==========================================
+    const observerOptions = {
+      threshold: 0.3,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observar todas las secciones con animaciones
+    document.querySelectorAll('.slide-up, .fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ==========================================
+    // CARRUSEL
+    // ==========================================
+    const discoverBtn = document.getElementById('discoverBtn');
+    const carouselSection = document.getElementById('carouselSection');
+    const closeCarousel = document.getElementById('closeCarousel');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dots = document.querySelectorAll('.dot');
+    
+    let currentSlide = 0;
+    const totalSlides = 4;
+    let autoPlayInterval;
+
+    // Mostrar carrusel
+    discoverBtn.addEventListener('click', () => {
+      carouselSection.classList.remove('hidden');
+      carouselSection.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => startAutoPlay(), 1000);
+    });
+
+    // Cerrar carrusel
+    closeCarousel.addEventListener('click', () => {
+      carouselSection.classList.remove('visible');
+      carouselSection.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+      stopAutoPlay();
+    });
+
+    // Función para actualizar slide
+    function updateSlide(index) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) {
+          slide.classList.add('active');
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.remove('active');
+        if (i === index) {
+          dot.classList.add('active');
+        }
+      });
+
+      currentSlide = index;
+    }
+
+    // Navegación
+    prevBtn.addEventListener('click', () => {
+      stopAutoPlay();
+      const newIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateSlide(newIndex);
+      setTimeout(startAutoPlay, 3000);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      stopAutoPlay();
+      const newIndex = (currentSlide + 1) % totalSlides;
+      updateSlide(newIndex);
+      setTimeout(startAutoPlay, 3000);
+    });
+
+    // Dots
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        stopAutoPlay();
+        const slideIndex = parseInt(dot.getAttribute('data-slide'));
+        updateSlide(slideIndex);
+        setTimeout(startAutoPlay, 3000);
+      });
+    });
+
+    // Auto-play
+    function startAutoPlay() {
+      autoPlayInterval = setInterval(() => {
+        const newIndex = (currentSlide + 1) % totalSlides;
+        updateSlide(newIndex);
+      }, 3500);
+    }
+
+    function stopAutoPlay() {
+      clearInterval(autoPlayInterval);
+    }
+
+    // ==========================================
+    // EFECTOS ADICIONALES
+    // ==========================================
+    
+    // Parallax suave en el scroll
+    const scrollContainer = document.getElementById('scrollContainer');
+    scrollContainer.addEventListener('scroll', () => {
+      const scrolled = scrollContainer.scrollTop;
+      const hearts = document.querySelectorAll('.heart-float');
+      hearts.forEach((heart, index) => {
+        const speed = 0.5 + (index * 0.2);
+        heart.style.transform = `translateY(${scrolled * speed}px)`;
+      });
+    });
+
+    // Prevenir scroll cuando el carrusel está abierto
+    carouselSection.addEventListener('wheel', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    carouselSection.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+  </script>
+</body>
+</html>
