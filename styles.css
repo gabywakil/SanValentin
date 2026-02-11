@@ -1,7 +1,49 @@
 /* ============================================
-   PANTALLA DE INICIO
+   BOTÓN FLOTANTE DE MÚSICA
    ============================================ */
-   .start-screen {
+   .floating-music-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 8px 25px rgba(196, 69, 105, 0.4);
+    cursor: pointer;
+    z-index: 1999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    animation: pulseFloat 2s ease-in-out infinite;
+  }
+  
+  .floating-music-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(196, 69, 105, 0.5);
+  }
+  
+  .floating-music-btn svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  @keyframes pulseFloat {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  /* ============================================
+     PANTALLA DE INICIO
+     ============================================ */
+  .start-screen {
     position: fixed;
     top: 0;
     left: 0;

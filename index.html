@@ -28,6 +28,13 @@
     </div>
   </div>
 
+  <!-- Botón flotante de música (siempre visible) -->
+  <button class="floating-music-btn" id="floatingMusicBtn" style="display: none;">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </svg>
+  </button>
+
   <!-- Reproductor de música flotante -->
   <div class="music-player" id="musicPlayer">
     <div class="player-content">
@@ -83,7 +90,9 @@
   </div>
 
   <!-- Reproductor de YouTube (oculto) -->
-  <div id="youtube-player"></div>
+  <audio id="audioPlayer" preload="auto" loop>
+    <source src="cancion.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- Partículas de corazones flotantes -->
   <div class="particles-container" id="particles"></div>
@@ -307,11 +316,40 @@
 
   <script>
     // ==========================================
+    // REPRODUCTOR DE MÚSICA MP3
+    // ==========================================
+    const audioPlayer = document.getElementById('audioPlayer');
+    const musicPlayer = document.getElementById('musicPlayer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.querySelector('.play-icon');
+    const pauseIcon = document.querySelector('.pause-icon');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalTimeEl = document.getElementById('totalTime');
+    const closePlayerBtn = document.getElementById('closePlayerBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const repeatBtn = document.getElementById('repeatBtn');
+    const prevBtnMusic = document.getElementById('prevBtnMusic');
+    const nextBtnMusic = document.getElementById('nextBtnMusic');
+
+    // Configuración de la canción
+    const songConfig = {
+      title: "Para Siempre",
+      artist: "Kany García",
+      albumCover: "https://i.scdn.co/image/ab67616d0000b273e5c0f7a9f8c8e3b5d8c9e0f1" // Puedes cambiar esta URL
+    };
+
+    // Aplicar configuración
+    document.getElementById('songTitle').textContent = songConfig.title;
+    document.getElementById('artistName').textContent = songConfig.artist;
+    document.getElementById('albumCover').src = songConfig.albumCover;
+
+    // ==========================================
     // PANTALLA DE INICIO
     // ==========================================
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
-    let musicStarted = false;
 
     startButton.addEventListener('click', () => {
       startScreen.classList.add('fade-out');
@@ -320,136 +358,67 @@
       }, 500);
       
       // Iniciar música
-      if (youtubePlayer && youtubePlayer.playVideo) {
-        youtubePlayer.playVideo();
-        musicStarted = true;
-        
+      audioPlayer.play().then(() => {
+        console.log('Música iniciada');
         // Mostrar reproductor
         setTimeout(() => {
-          document.getElementById('musicPlayer').classList.add('visible');
+          musicPlayer.classList.add('visible');
         }, 800);
-      }
+      }).catch(err => {
+        console.error('Error al reproducir:', err);
+      });
     });
 
     // ==========================================
-    // CARGAR API DE YOUTUBE
+    // CONTROLES DEL REPRODUCTOR
     // ==========================================
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    var youtubePlayer;
-    var progressInterval;
-
-    function onYouTubeIframeAPIReady() {
-      youtubePlayer = new YT.Player('youtube-player', {
-        height: '0',
-        width: '0',
-        videoId: 'ieBvA3kMJB4', // Tu canción de YouTube
-        playerVars: {
-          'autoplay': 0,
-          'controls': 0,
-          'disablekb': 1,
-          'modestbranding': 1,
-          'playsinline': 1,
-          'enablejsapi': 1
-        },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
-
-    function onPlayerReady(event) {
-      console.log('YouTube player ready');
-      // El reproductor está listo, esperando el click del usuario
-    }
-
-    function onPlayerStateChange(event) {
-      const playIcon = document.querySelector('.play-icon');
-      const pauseIcon = document.querySelector('.pause-icon');
-      const musicPlayer = document.getElementById('musicPlayer');
-
-      if (event.data == YT.PlayerState.PLAYING) {
+    
+    // Play/Pause
+    playPauseBtn.addEventListener('click', () => {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
         playIcon.classList.add('hidden');
         pauseIcon.classList.remove('hidden');
         musicPlayer.classList.add('playing');
-
-        // Actualizar duración
-        var duration = youtubePlayer.getDuration();
-        document.getElementById('totalTime').textContent = formatTime(duration);
-        
-        // Actualizar progreso cada segundo
-        if (progressInterval) clearInterval(progressInterval);
-        progressInterval = setInterval(function() {
-          var currentTime = youtubePlayer.getCurrentTime();
-          var duration = youtubePlayer.getDuration();
-          var progress = (currentTime / duration) * 100;
-          
-          document.getElementById('progressFill').style.width = progress + '%';
-          document.getElementById('currentTime').textContent = formatTime(currentTime);
-        }, 500);
-      } else if (event.data == YT.PlayerState.PAUSED) {
+      } else {
+        audioPlayer.pause();
         playIcon.classList.remove('hidden');
         pauseIcon.classList.add('hidden');
         musicPlayer.classList.remove('playing');
-        clearInterval(progressInterval);
-      } else if (event.data == YT.PlayerState.ENDED) {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-        musicPlayer.classList.remove('playing');
-        clearInterval(progressInterval);
-        
-        // Reiniciar si está en loop
-        if (isLooping) {
-          setTimeout(() => {
-            youtubePlayer.playVideo();
-          }, 500);
-        }
       }
-    }
+    });
 
-    // ==========================================
-    // REPRODUCTOR DE MÚSICA - CONTROLES
-    // ==========================================
-    const musicPlayer = document.getElementById('musicPlayer');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const progressBar = document.getElementById('progressBar');
-    const closePlayerBtn = document.getElementById('closePlayerBtn');
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    const repeatBtn = document.getElementById('repeatBtn');
-    const prevBtnMusic = document.getElementById('prevBtnMusic');
-    const nextBtnMusic = document.getElementById('nextBtnMusic');
+    // Actualizar barra de progreso
+    audioPlayer.addEventListener('timeupdate', () => {
+      const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+      progressFill.style.width = progress + '%';
+      currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+    });
 
-    // Play/Pause
-    playPauseBtn.addEventListener('click', () => {
-      if (youtubePlayer && youtubePlayer.getPlayerState) {
-        if (youtubePlayer.getPlayerState() == YT.PlayerState.PLAYING) {
-          youtubePlayer.pauseVideo();
-        } else {
-          youtubePlayer.playVideo();
-        }
-      }
+    // Actualizar duración total
+    audioPlayer.addEventListener('loadedmetadata', () => {
+      totalTimeEl.textContent = formatTime(audioPlayer.duration);
     });
 
     // Click en barra de progreso
     progressBar.addEventListener('click', (e) => {
-      if (youtubePlayer && youtubePlayer.getDuration) {
-        const rect = progressBar.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        const newTime = percent * youtubePlayer.getDuration();
-        youtubePlayer.seekTo(newTime, true);
-      }
+      const rect = progressBar.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      audioPlayer.currentTime = percent * audioPlayer.duration;
     });
 
-    // Cerrar reproductor
+    // Cerrar reproductor (PERO LA MÚSICA SIGUE SONANDO)
     closePlayerBtn.addEventListener('click', () => {
       musicPlayer.classList.remove('visible');
-      if (youtubePlayer && youtubePlayer.pauseVideo) {
-        youtubePlayer.pauseVideo();
-      }
+      // Mostrar botón flotante
+      document.getElementById('floatingMusicBtn').style.display = 'flex';
+      // NO pausamos el audio, solo ocultamos el reproductor
+    });
+
+    // Botón flotante para mostrar reproductor de nuevo
+    document.getElementById('floatingMusicBtn').addEventListener('click', () => {
+      musicPlayer.classList.add('visible');
+      document.getElementById('floatingMusicBtn').style.display = 'none';
     });
 
     // Shuffle toggle (visual)
@@ -457,26 +426,37 @@
       shuffleBtn.classList.toggle('active');
     });
 
-    // Repeat toggle
-    let isLooping = false;
+    // Repeat toggle (ya está en loop por defecto)
     repeatBtn.addEventListener('click', () => {
       repeatBtn.classList.toggle('active');
-      isLooping = !isLooping;
+      audioPlayer.loop = !audioPlayer.loop;
     });
+    
+    // Activar loop por defecto
+    audioPlayer.loop = true;
+    repeatBtn.classList.add('active');
 
     // Botones prev/next
     prevBtnMusic.addEventListener('click', () => {
-      if (youtubePlayer && youtubePlayer.seekTo) {
-        youtubePlayer.seekTo(0, true);
-        youtubePlayer.playVideo();
-      }
+      audioPlayer.currentTime = 0;
     });
 
     nextBtnMusic.addEventListener('click', () => {
-      if (youtubePlayer && youtubePlayer.seekTo) {
-        youtubePlayer.seekTo(0, true);
-        youtubePlayer.playVideo();
-      }
+      audioPlayer.currentTime = 0;
+      audioPlayer.play();
+    });
+
+    // Actualizar estado del reproductor cuando el audio se reproduce
+    audioPlayer.addEventListener('play', () => {
+      playIcon.classList.add('hidden');
+      pauseIcon.classList.remove('hidden');
+      musicPlayer.classList.add('playing');
+    });
+
+    audioPlayer.addEventListener('pause', () => {
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      musicPlayer.classList.remove('playing');
     });
 
     // Formatear tiempo
