@@ -22,22 +22,43 @@ const nextBtnMusic = document.getElementById('nextBtnMusic');
 const startScreen = document.getElementById('startScreen');
 const startButton = document.getElementById('startButton');
 
-startButton.addEventListener('click', () => {
+startButton.addEventListener('click', async () => {
   startScreen.classList.add('fade-out');
   setTimeout(() => {
     startScreen.style.display = 'none';
   }, 500);
-  
-  // Iniciar música
-  audioPlayer.play().then(() => {
-    console.log('Música iniciada');
+
+  try {
+    // 🔥 Asegura estado correcto antes de reproducir
+    audioPlayer.muted = false;
+    audioPlayer.volume = 1;
+    audioPlayer.currentTime = 0;
+
+    // Fuerza a recargar el source (útil si el navegador no lo cargó aún)
+    audioPlayer.load();
+
+    // ✅ Play dentro del mismo click (clave en iPhone)
+    await audioPlayer.play();
+
+    console.log('Música iniciada ✅');
+
     // Mostrar reproductor
     setTimeout(() => {
       musicPlayer.classList.add('visible');
     }, 800);
-  }).catch(err => {
+
+  } catch (err) {
     console.error('Error al reproducir:', err);
-  });
+
+    // ✅ Mensaje claro para ti (en vez de solo consola)
+    alert(
+      "No se pudo reproducir el audio.\n\n" +
+      "Revisa:\n" +
+      "1) que el archivo se llame EXACTO: cancion.mp3\n" +
+      "2) que esté en la misma carpeta que index.html\n" +
+      "3) que lo abras con Live Server (no con doble click)."
+    );
+  }
 });
 
 // ==========================================
@@ -284,3 +305,9 @@ carouselSection.addEventListener('wheel', (e) => {
 carouselSection.addEventListener('touchmove', (e) => {
   e.preventDefault();
 }, { passive: false });
+
+document.addEventListener('touchstart', () => {
+    if (audioPlayer && audioPlayer.paused) {
+      audioPlayer.play().catch(()=>{});
+    }
+  }, { once: true });
