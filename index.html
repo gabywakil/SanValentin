@@ -13,9 +13,19 @@
 </head>
 
 <body>
+  <!-- Botón flotante de música (siempre visible) -->
+  <button class="floating-music-btn" id="floatingMusicBtn" style="display: none;">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </svg>
+  </button>
+
   <!-- Pantalla de inicio para activar música -->
   <div class="start-screen" id="startScreen">
     <div class="start-content">
+      <div class="heart-animation">
+        <span class="big-heart">♥</span>
+      </div>
       <h1 class="start-title">Para ti ❤️</h1>
       <p class="start-subtitle">Toca para comenzar</p>
       <button class="start-button" id="startButton">
@@ -32,12 +42,12 @@
   <div class="music-player" id="musicPlayer">
     <div class="player-content">
       <div class="album-cover">
-        <img src="https://i.ytimg.com/vi/ieBvA3kMJB4/maxresdefault.jpg" alt="Portada de la canción" id="albumCover" />
+        <img src="https://i1.sndcdn.com/artworks-000614084566-1e50mu-t500x500.jpg" alt="Portada de la canción" id="albumCover" />
         <div class="vinyl-overlay"></div>
       </div>
       <div class="song-info">
-        <h3 class="song-title" id="songTitle">Canción Romántica</h3>
-        <p class="artist-name" id="artistName">Para ti</p>
+        <h3 class="song-title" id="songTitle">Para Siempre</h3>
+        <p class="artist-name" id="artistName">Kany García</p>
       </div>
       <div class="player-controls">
         <div class="progress-container">
@@ -71,7 +81,7 @@
               <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
             </svg>
           </button>
-          <button class="control-btn repeat-btn" id="repeatBtn">
+          <button class="control-btn repeat-btn active" id="repeatBtn">
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>
             </svg>
@@ -82,8 +92,10 @@
     </div>
   </div>
 
-  <!-- Reproductor de YouTube (oculto) -->
-  <div id="youtube-player"></div>
+  <!-- Audio element (oculto) -->
+  <audio id="audioPlayer" preload="auto" loop>
+    <source src="cancion.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- Partículas de corazones flotantes -->
   <div class="particles-container" id="particles"></div>
@@ -305,340 +317,6 @@
 
   </div>
 
-  <script>
-    // ==========================================
-    // PANTALLA DE INICIO
-    // ==========================================
-    const startScreen = document.getElementById('startScreen');
-    const startButton = document.getElementById('startButton');
-    let musicStarted = false;
-
-    startButton.addEventListener('click', () => {
-      startScreen.classList.add('fade-out');
-      setTimeout(() => {
-        startScreen.style.display = 'none';
-      }, 500);
-      
-      // Iniciar música
-      if (youtubePlayer && youtubePlayer.playVideo) {
-        youtubePlayer.playVideo();
-        musicStarted = true;
-        
-        // Mostrar reproductor
-        setTimeout(() => {
-          document.getElementById('musicPlayer').classList.add('visible');
-        }, 800);
-      }
-    });
-
-    // ==========================================
-    // CARGAR API DE YOUTUBE
-    // ==========================================
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    var youtubePlayer;
-    var progressInterval;
-
-    function onYouTubeIframeAPIReady() {
-      youtubePlayer = new YT.Player('youtube-player', {
-        height: '0',
-        width: '0',
-        videoId: 'ieBvA3kMJB4', // Tu canción de YouTube
-        playerVars: {
-          'autoplay': 0,
-          'controls': 0,
-          'disablekb': 1,
-          'modestbranding': 1,
-          'playsinline': 1,
-          'enablejsapi': 1
-        },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
-
-    function onPlayerReady(event) {
-      console.log('YouTube player ready');
-      // El reproductor está listo, esperando el click del usuario
-    }
-
-    function onPlayerStateChange(event) {
-      const playIcon = document.querySelector('.play-icon');
-      const pauseIcon = document.querySelector('.pause-icon');
-      const musicPlayer = document.getElementById('musicPlayer');
-
-      if (event.data == YT.PlayerState.PLAYING) {
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
-        musicPlayer.classList.add('playing');
-
-        // Actualizar duración
-        var duration = youtubePlayer.getDuration();
-        document.getElementById('totalTime').textContent = formatTime(duration);
-        
-        // Actualizar progreso cada segundo
-        if (progressInterval) clearInterval(progressInterval);
-        progressInterval = setInterval(function() {
-          var currentTime = youtubePlayer.getCurrentTime();
-          var duration = youtubePlayer.getDuration();
-          var progress = (currentTime / duration) * 100;
-          
-          document.getElementById('progressFill').style.width = progress + '%';
-          document.getElementById('currentTime').textContent = formatTime(currentTime);
-        }, 500);
-      } else if (event.data == YT.PlayerState.PAUSED) {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-        musicPlayer.classList.remove('playing');
-        clearInterval(progressInterval);
-      } else if (event.data == YT.PlayerState.ENDED) {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-        musicPlayer.classList.remove('playing');
-        clearInterval(progressInterval);
-        
-        // Reiniciar si está en loop
-        if (isLooping) {
-          setTimeout(() => {
-            youtubePlayer.playVideo();
-          }, 500);
-        }
-      }
-    }
-
-    // ==========================================
-    // REPRODUCTOR DE MÚSICA - CONTROLES
-    // ==========================================
-    const musicPlayer = document.getElementById('musicPlayer');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const progressBar = document.getElementById('progressBar');
-    const closePlayerBtn = document.getElementById('closePlayerBtn');
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    const repeatBtn = document.getElementById('repeatBtn');
-    const prevBtnMusic = document.getElementById('prevBtnMusic');
-    const nextBtnMusic = document.getElementById('nextBtnMusic');
-
-    // Play/Pause
-    playPauseBtn.addEventListener('click', () => {
-      if (youtubePlayer && youtubePlayer.getPlayerState) {
-        if (youtubePlayer.getPlayerState() == YT.PlayerState.PLAYING) {
-          youtubePlayer.pauseVideo();
-        } else {
-          youtubePlayer.playVideo();
-        }
-      }
-    });
-
-    // Click en barra de progreso
-    progressBar.addEventListener('click', (e) => {
-      if (youtubePlayer && youtubePlayer.getDuration) {
-        const rect = progressBar.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        const newTime = percent * youtubePlayer.getDuration();
-        youtubePlayer.seekTo(newTime, true);
-      }
-    });
-
-    // Cerrar reproductor
-    closePlayerBtn.addEventListener('click', () => {
-      musicPlayer.classList.remove('visible');
-      if (youtubePlayer && youtubePlayer.pauseVideo) {
-        youtubePlayer.pauseVideo();
-      }
-    });
-
-    // Shuffle toggle (visual)
-    shuffleBtn.addEventListener('click', () => {
-      shuffleBtn.classList.toggle('active');
-    });
-
-    // Repeat toggle
-    let isLooping = false;
-    repeatBtn.addEventListener('click', () => {
-      repeatBtn.classList.toggle('active');
-      isLooping = !isLooping;
-    });
-
-    // Botones prev/next
-    prevBtnMusic.addEventListener('click', () => {
-      if (youtubePlayer && youtubePlayer.seekTo) {
-        youtubePlayer.seekTo(0, true);
-        youtubePlayer.playVideo();
-      }
-    });
-
-    nextBtnMusic.addEventListener('click', () => {
-      if (youtubePlayer && youtubePlayer.seekTo) {
-        youtubePlayer.seekTo(0, true);
-        youtubePlayer.playVideo();
-      }
-    });
-
-    // Formatear tiempo
-    function formatTime(seconds) {
-      if (isNaN(seconds)) return '0:00';
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // ==========================================
-    // PARTÍCULAS DE CORAZONES
-    // ==========================================
-    function createHeartParticles() {
-      const container = document.getElementById('particles');
-      const particleCount = 15;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 10 + 's';
-        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-        particle.innerHTML = '♥';
-        container.appendChild(particle);
-      }
-    }
-
-    createHeartParticles();
-
-    // ==========================================
-    // ANIMACIONES DE SCROLL
-    // ==========================================
-    const observerOptions = {
-      threshold: 0.3,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, observerOptions);
-
-    // Observar todas las secciones con animaciones
-    document.querySelectorAll('.slide-up, .fade-in').forEach(el => {
-      observer.observe(el);
-    });
-
-    // ==========================================
-    // CARRUSEL
-    // ==========================================
-    const discoverBtn = document.getElementById('discoverBtn');
-    const carouselSection = document.getElementById('carouselSection');
-    const closeCarousel = document.getElementById('closeCarousel');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const dots = document.querySelectorAll('.dot');
-    
-    let currentSlide = 0;
-    const totalSlides = 4;
-    let autoPlayInterval;
-
-    // Mostrar carrusel
-    discoverBtn.addEventListener('click', () => {
-      carouselSection.classList.remove('hidden');
-      carouselSection.classList.add('visible');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => startAutoPlay(), 1000);
-    });
-
-    // Cerrar carrusel
-    closeCarousel.addEventListener('click', () => {
-      carouselSection.classList.remove('visible');
-      carouselSection.classList.add('hidden');
-      document.body.style.overflow = 'auto';
-      stopAutoPlay();
-    });
-
-    // Función para actualizar slide
-    function updateSlide(index) {
-      const slides = document.querySelectorAll('.carousel-slide');
-      
-      slides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        if (i === index) {
-          slide.classList.add('active');
-        }
-      });
-
-      dots.forEach((dot, i) => {
-        dot.classList.remove('active');
-        if (i === index) {
-          dot.classList.add('active');
-        }
-      });
-
-      currentSlide = index;
-    }
-
-    // Navegación
-    prevBtn.addEventListener('click', () => {
-      stopAutoPlay();
-      const newIndex = (currentSlide - 1 + totalSlides) % totalSlides;
-      updateSlide(newIndex);
-      setTimeout(startAutoPlay, 3000);
-    });
-
-    nextBtn.addEventListener('click', () => {
-      stopAutoPlay();
-      const newIndex = (currentSlide + 1) % totalSlides;
-      updateSlide(newIndex);
-      setTimeout(startAutoPlay, 3000);
-    });
-
-    // Dots
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        stopAutoPlay();
-        const slideIndex = parseInt(dot.getAttribute('data-slide'));
-        updateSlide(slideIndex);
-        setTimeout(startAutoPlay, 3000);
-      });
-    });
-
-    // Auto-play
-    function startAutoPlay() {
-      autoPlayInterval = setInterval(() => {
-        const newIndex = (currentSlide + 1) % totalSlides;
-        updateSlide(newIndex);
-      }, 3500);
-    }
-
-    function stopAutoPlay() {
-      clearInterval(autoPlayInterval);
-    }
-
-    // ==========================================
-    // EFECTOS ADICIONALES
-    // ==========================================
-    
-    // Parallax suave en el scroll
-    const scrollContainer = document.getElementById('scrollContainer');
-    scrollContainer.addEventListener('scroll', () => {
-      const scrolled = scrollContainer.scrollTop;
-      const hearts = document.querySelectorAll('.heart-float');
-      hearts.forEach((heart, index) => {
-        const speed = 0.5 + (index * 0.2);
-        heart.style.transform = `translateY(${scrolled * speed}px)`;
-      });
-    });
-
-    // Prevenir scroll cuando el carrusel está abierto
-    carouselSection.addEventListener('wheel', (e) => {
-      e.preventDefault();
-    }, { passive: false });
-
-    carouselSection.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-    }, { passive: false });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
