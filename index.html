@@ -102,7 +102,7 @@
 
   <!-- Contenedor principal con scroll -->
   <div class="scroll-container" id="scrollContainer">
-    
+
     <!-- Sección 1: Portada -->
     <section class="section section-cover">
       <div class="cover-content fade-in">
@@ -129,7 +129,7 @@
       <div class="content-box slide-up">
         <p class="lead-text">La razón no es mi fuerte</p>
         <p class="sub-text">una de 2, a veces,</p>
-        
+
         <div class="divider-fancy">
           <span class="line"></span>
           <span class="heart-icon">♥</span>
@@ -173,7 +173,7 @@
     <section class="section section-photo">
       <div class="photo-card slide-up">
         <div class="photo-frame">
-          <img src="assets/1.jpeg" alt="Nuestro momento" />
+          <img src="assets/1.jpeg" alt="Nuestro momento" loading="lazy" decoding="async" />
         </div>
         <p class="photo-text">Cada momento contigo es especial</p>
       </div>
@@ -183,7 +183,7 @@
     <section class="section section-photo">
       <div class="photo-card slide-up">
         <div class="photo-frame">
-          <img src="assets/2.jpeg" alt="Nuestro recuerdo" />
+          <img src="assets/2.jpeg" alt="Nuestro recuerdo" loading="lazy" decoding="async" />
         </div>
         <p class="photo-text">Atesoro cada sonrisa tuya</p>
       </div>
@@ -193,7 +193,7 @@
     <section class="section section-photo">
       <div class="photo-card slide-up">
         <div class="photo-frame">
-          <img src="assets/3.jpeg" alt="Juntos" />
+          <img src="assets/3.jpeg" alt="Juntos" loading="lazy" decoding="async" />
         </div>
         <p class="photo-text">Tú iluminas mi vida</p>
       </div>
@@ -203,7 +203,7 @@
     <section class="section section-photo">
       <div class="photo-card slide-up">
         <div class="photo-frame">
-          <img src="assets/4.jpeg" alt="Para siempre" />
+          <img src="assets/4.jpeg" alt="Para siempre" loading="lazy" decoding="async" />
         </div>
         <p class="photo-text">Contigo quiero estar siempre</p>
       </div>
@@ -225,49 +225,46 @@
     <!-- Sección 10: Carrusel interactivo -->
     <section class="section section-carousel hidden" id="carouselSection">
       <div class="carousel-wrapper">
-        <button class="close-btn" id="closeCarousel">×</button>
-        
+        <button class="close-btn" id="closeCarousel" aria-label="Cerrar">×</button>
+
         <h2 class="carousel-title">Nuestros mejores momentos</h2>
-        
+
         <div class="carousel-container">
-          <button class="nav-btn prev-btn" id="prevBtn">‹</button>
-          
-          <div class="carousel-track-container">
+          <button class="nav-btn prev-btn" id="prevBtn" aria-label="Anterior">‹</button>
+
+          <!-- ✅ CAMBIO: agrego clase extra para “marco iPhone” y swipe -->
+          <div class="carousel-track-container phone-frame" id="phoneFrame">
             <div class="carousel-track" id="carouselTrack">
-              <!-- Slide 1 -->
               <div class="carousel-slide active">
                 <div class="slide-content">
-                  <img src="assets/5.jpeg" alt="Momento 1" />
+                  <img src="assets/5.jpeg" alt="Momento 1" loading="lazy" decoding="async" />
                   <div class="slide-overlay">
                     <p class="slide-caption">El inicio de algo hermoso</p>
                   </div>
                 </div>
               </div>
-              
-              <!-- Slide 2 -->
+
               <div class="carousel-slide">
                 <div class="slide-content">
-                  <img src="assets/6.jpeg" alt="Momento 2" />
+                  <img src="assets/6.jpeg" alt="Momento 2" loading="lazy" decoding="async" />
                   <div class="slide-overlay">
                     <p class="slide-caption">Momentos que no olvidaré</p>
                   </div>
                 </div>
               </div>
-              
-              <!-- Slide 3 -->
+
               <div class="carousel-slide">
                 <div class="slide-content">
-                  <img src="assets/7.jpeg" alt="Momento 3" />
+                  <img src="assets/7.jpeg" alt="Momento 3" loading="lazy" decoding="async" />
                   <div class="slide-overlay">
                     <p class="slide-caption">Tu sonrisa es mi felicidad</p>
                   </div>
                 </div>
               </div>
-              
-              <!-- Slide 4 -->
+
               <div class="carousel-slide">
                 <div class="slide-content">
-                  <img src="assets/8.jpeg" alt="Momento 4" />
+                  <img src="assets/8.jpeg" alt="Momento 4" loading="lazy" decoding="async" />
                   <div class="slide-overlay">
                     <p class="slide-caption">Para siempre juntos ❤️</p>
                   </div>
@@ -275,10 +272,10 @@
               </div>
             </div>
           </div>
-          
-          <button class="nav-btn next-btn" id="nextBtn">›</button>
+
+          <button class="nav-btn next-btn" id="nextBtn" aria-label="Siguiente">›</button>
         </div>
-        
+
         <div class="carousel-dots" id="carouselDots">
           <span class="dot active" data-slide="0"></span>
           <span class="dot" data-slide="1"></span>
