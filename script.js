@@ -19,47 +19,85 @@ const nextBtnMusic = document.getElementById('nextBtnMusic');
 // ==========================================
 // PANTALLA DE INICIO
 // ==========================================
+// ==========================================
+// PANTALLA DE INICIO (iPhone-friendly)
+// ==========================================
 const startScreen = document.getElementById('startScreen');
 const startButton = document.getElementById('startButton');
 
-startButton.addEventListener('click', async () => {
-  startScreen.classList.add('fade-out');
-  setTimeout(() => {
-    startScreen.style.display = 'none';
-  }, 500);
+let userActivatedAudio = false;
 
+async function safePlay() {
   try {
-    // 🔥 Asegura estado correcto antes de reproducir
     audioPlayer.muted = false;
     audioPlayer.volume = 1;
-    audioPlayer.currentTime = 0;
 
-    // Fuerza a recargar el source (útil si el navegador no lo cargó aún)
-    audioPlayer.load();
+    // En iOS a veces ayuda “despertar” el audio recargando source
+    if (audioPlayer.readyState < 2) audioPlayer.load();
 
-    // ✅ Play dentro del mismo click (clave en iPhone)
     await audioPlayer.play();
+    userActivatedAudio = true;
 
-    console.log('Música iniciada ✅');
+    // UI estado play
+    playIcon.classList.add('hidden');
+    pauseIcon.classList.remove('hidden');
+    musicPlayer.classList.add('playing');
 
-    // Mostrar reproductor
-    setTimeout(() => {
-      musicPlayer.classList.add('visible');
-    }, 800);
+    return true;
+  } catch (e) {
+    console.warn('No pudo iniciar audio:', e);
+    return false;
+  }
+}
 
-  } catch (err) {
-    console.error('Error al reproducir:', err);
+startButton.addEventListener('click', async () => {
+  // Oculta portada
+  startScreen.classList.add('fade-out');
+  setTimeout(() => (startScreen.style.display = 'none'), 500);
 
-    // ✅ Mensaje claro para ti (en vez de solo consola)
+  // Arranca audio EN EL MISMO CLICK (clave iPhone)
+  const ok = await safePlay();
+
+  // Mostrar reproductor (siempre, aunque el audio falle)
+  setTimeout(() => {
+    musicPlayer.classList.add('visible');
+  }, 700);
+
+  if (!ok) {
     alert(
       "No se pudo reproducir el audio.\n\n" +
       "Revisa:\n" +
-      "1) que el archivo se llame EXACTO: cancion.mp3\n" +
-      "2) que esté en la misma carpeta que index.html\n" +
-      "3) que lo abras con Live Server (no con doble click)."
+      "1) El archivo se llama EXACTO: cancion.mp3\n" +
+      "2) Está en la misma carpeta que index.html\n" +
+      "3) En GitHub Pages subiste también el mp3\n"
     );
   }
 });
+
+// Re-intentos “silenciosos” para mantener música de fondo
+function keepAudioAlive() {
+  if (!userActivatedAudio) return;
+
+  // Si el navegador la pausa por cambio de pestaña / modo ahorro, reintenta
+  if (audioPlayer.paused) {
+    audioPlayer.play().catch(() => {});
+  }
+}
+
+// Cuando vuelves a la página (iOS Safari)
+window.addEventListener('pageshow', keepAudioAlive);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') keepAudioAlive();
+});
+
+// Primer toque extra por si iOS se pone raro
+document.addEventListener(
+  'touchstart',
+  () => {
+    keepAudioAlive();
+  },
+  { passive: true }
+);
 
 // ==========================================
 // CONTROLES DEL REPRODUCTOR
